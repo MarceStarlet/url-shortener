@@ -18,12 +18,18 @@ class ShortURLGenerator @Inject() (cc: ControllerComponents, shortURLGenerator: 
   val logger = Logger(getClass)
 
   def generateShortURL() = Action.async(parse.json) { content =>
-    logger.info(s"Content=>${content.body}")
+
+    logger.info(s"Content: ${content.body}")
+
     content.body.validate[HttpShortUrl].map {
       original =>
         shortURLGenerator.createShortURL(original.original).map {
-          result => Created(result)
+          result => Created(formatShortUrl(content.host, result))
         }
     }.getOrElse(Future.successful(BadRequest("Invalid request")))
+  }
+  
+  private def formatShortUrl(domain: String, shortedUrlId: String): String = {
+    s"http://${domain}/${shortedUrlId}"
   }
 }

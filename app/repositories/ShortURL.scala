@@ -9,7 +9,7 @@ trait ShortURL {
 
   def save(entity: ShortURLModel): Future[WriteResult]
 
-  def exists(original: String): Boolean
+  def findByOriginal(original: String): Future[String]
 
   def findById(shorted: String): Future[String]
 
