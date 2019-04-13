@@ -5,9 +5,17 @@ import reactivemongo.play.json.collection.JSONCollection
 import play.api.libs.json._
 import reactivemongo.bson.BSONObjectID
 
-case class HttpShortUrl(
+case class HttpUrl(
   original: String)
 
+/**
+ * The ShortURL model
+ * @param _id
+ * @param original
+ * @param shorted
+ * @param created
+ * @param accessed
+ */
 case class ShortURL(
   _id: Option[BSONObjectID],
   original: String,
@@ -15,24 +23,13 @@ case class ShortURL(
   created: Long,
   accessed: Long)
 
+/**
+ * The implict JSON formatter for models
+ */
 object JsonFormats {
   import play.api.libs.json._
 
   implicit val shortURLFormat: OFormat[ShortURL] = Json.format[ShortURL]
 
-  implicit val httpShortURLFormat: OFormat[HttpShortUrl] = Json.format[HttpShortUrl]
+  implicit val httpShortURLFormat: OFormat[HttpUrl] = Json.format[HttpUrl]
 }
-
-//object ShortURLSerializer {
-//
-//  implicit object ShortURLWriter extends BSONDocumentWriter[ShortURL] {
-//
-//    def write(shortURL: ShortURL): BSONDocument = BSONDocument(
-//      "_id" -> BSONObjectID.generate(),
-//      "original" -> shortURL.original,
-//      "shorted" -> shortURL.shorted,
-//      "created" -> shortURL.created,
-//      "accessed" -> shortURL.accessed)
-//  }
-//
-//}

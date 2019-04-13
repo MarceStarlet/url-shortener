@@ -10,9 +10,13 @@ class URLShortenerApplication @Inject() (cc: ControllerComponents)(implicit asse
 
   val logger = Logger(getClass)
 
-  def index = Action {
-    logger.info("index welcoming")
-    Ok(views.html.index("Hello World!"))
+  /**
+   * Endpoint to the index web page
+   * @return
+   */
+  def index() = Action {
+    logger.info("Welcoming to URL Shortener index")
+    Ok(views.html.index(""))
   }
 
 }

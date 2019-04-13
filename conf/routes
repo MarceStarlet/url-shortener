@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                                controllers.URLShortenerApplication.index
+
++ nocsrf
 POST    /shorturl                        controllers.ShortURLGenerator.generateShortURL
 GET     /:shortURLId                     controllers.ShortURLGenerator.redirectToOriginal(shortURLId: String)
 

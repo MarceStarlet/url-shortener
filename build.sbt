@@ -13,7 +13,3 @@ libraryDependencies ++= Seq(
   "org.scalatestplus.play" %% "scalatestplus-play"  % scalaTestVersion % Test,
   "org.reactivemongo"      %% "play2-reactivemongo" % reactiveMongoVer
 )
-
-import play.sbt.routes.RoutesKeys
-
-RoutesKeys.routesImport += "play.modules.reactivemongo.PathBindables._"
