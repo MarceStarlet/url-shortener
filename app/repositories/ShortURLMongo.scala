@@ -6,7 +6,6 @@ import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.api.commands.WriteResult
 import reactivemongo.play.json.collection.JSONCollection
 import models.{ ShortURL => ShortURLModel }
-import reactivemongo.api.Cursor
 import reactivemongo.bson.{ BSONDocument }
 import reactivemongo.play.json._
 
@@ -34,18 +33,20 @@ class ShortURLMongo @Inject() (implicit ec: ExecutionContext, reactiveMongoApi: 
       db.find(BSONDocument("original" -> original))
         .one[BSONDocument].flatMap { result =>
           val res: BSONDocument = result.getOrElse(BSONDocument("shorted" -> ""))
-          logger.info(s"res ${res.getAs[String]("shorted").get}")
+          logger.info(s"findByOriginal: ${res.getAs[String]("shorted").get}")
           Future(res.getAs[String]("shorted").get)
         }
     }
-    //    shortUrlCollection.flatMap { db =>
-    //      db.find(selector = BSONDocument("original" -> BSONDocument("$exists" -> true)),
-    //        projection = Option.empty[BSONDocument])
-    //        .cursor[BSONDocument]().collect[List](-1, Cursor.FailOnError[List[BSONDocument]]())
-    //    }.flatMap { result =>
-    //      Future(!result.isEmpty)
-    //    }
   }
 
-  def findById(shorted: String): Future[String] = ???
+  def findById(shorted: String): Future[String] = {
+    shortUrlCollection.flatMap { db =>
+      db.find(BSONDocument("shorted" -> shorted))
+        .one[BSONDocument].flatMap { result =>
+          val res: BSONDocument = result.getOrElse(BSONDocument("original" -> ""))
+          logger.info(s"findById: ${res.getAs[String]("original").get}")
+          Future(res.getAs[String]("original").get)
+        }
+    }
+  }
 }

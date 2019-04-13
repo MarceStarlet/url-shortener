@@ -14,7 +14,7 @@ trait ShortURLGenerator {
 
   def createShortURL(original: String): Future[String]
 
-  def retrieveHttpUrl(shorted: String): Future[String]
+  def resolveOriginalURL(shorted: String): Future[Option[String]]
 
 }
 
@@ -45,7 +45,15 @@ class ShortURLGeneratorServ @Inject() (implicit ec: ExecutionContext, shortURLMo
     }
   }
 
-  override def retrieveHttpUrl(shorted: String): Future[String] = ???
+  override def resolveOriginalURL(shorted: String): Future[Option[String]] = {
+    shortURLMongo.findById(shorted).flatMap { original =>
+      if (original.isEmpty) {
+        Future(None)
+      } else {
+        Future(Some(original))
+      }
+    }
+  }
 
   private def getMongoId(): BSONObjectID = {
     BSONObjectID.generate()
